@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 int main() {
-    pid_t pid;
+    pid_t pid[3];
     char playerFIFO[30] = "./playerFIFO";
     char displayFIFO[30] = "./displayFIFO";
 
@@ -25,7 +25,7 @@ int main() {
     mkfifo(playerFIFO, 0666);
     mkfifo(displayFIFO, 0666);
 
-    switch ((pid = fork())) 
+    switch ((pid[0] = fork())) 
     {
         case -1:
             fprintf(stderr, "error creating child\n");
@@ -41,7 +41,7 @@ int main() {
             break;
     }
 
-    switch ((pid = fork())) 
+    switch ((pid[1] = fork())) 
     {
         case -1:
             fprintf(stderr, "error creating child\n");
@@ -57,7 +57,7 @@ int main() {
             break;
     }
 
-    switch ((pid = fork())) 
+    switch ((pid[2] = fork())) 
     {
         case -1:
             fprintf(stderr, "error creating child\n");
@@ -73,10 +73,13 @@ int main() {
             break;
     }
     int fd = open("./playerFIFO", O_WRONLY);
-
     write(fd, "first", 256);
     close(fd);
-    sleep(2);
+
+    int i;
+    for (i = 0; i < 3; i++) {
+        wait(pid[i]);
+    }
 
     return 0;
 }

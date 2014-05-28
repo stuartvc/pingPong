@@ -7,7 +7,7 @@ start.o : start.c
 	gcc -c start.c
 
 display : display.o
-	gcc -o display display.o
+	gcc -o display display.o -lncurses
 
 display.o : display.c
 	gcc -c display.c

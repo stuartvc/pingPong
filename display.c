@@ -15,12 +15,16 @@ int main(int argc, char *argv[]) {
     }
     int dispfd = open(argv[1], O_RDONLY);
     char buf[256] = "\0";
+    initscr();
 
     read(dispfd, buf, 256);
-    fprintf(stdout, "got message: %s\n", buf);
+    printw("got message: %s\n", buf);
+    refresh();
     read(dispfd, buf, 256);
-    fprintf(stdout, "got message: %s\n", buf);
+    printw("got message: %s\n", buf);
+    refresh();
     sleep(1);
+    endwin();
     close(dispfd);
     unlink(argv[1]);
 
