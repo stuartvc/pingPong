@@ -23,6 +23,11 @@ int main(int argc, char *argv[]) {
     read(dispfd, buf, 256);
     printw("got message: %s\n", buf);
     refresh();
+    while (!system("pgrep player > /dev/null")) {
+        read(dispfd, buf, 256);
+        printw("got message: %s\n", buf);
+        refresh();
+    }
     sleep(1);
     endwin();
     close(dispfd);
