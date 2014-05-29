@@ -23,36 +23,34 @@ int main(int argc, char *argv[]) {
     read(playfd, buf, 256);
     if (!strncmp(buf, "first", 5)){
         playerNum = 1;
-        strncpy(buf, "got first\0", 10);
-        write(dispfd, buf, 256);
+        sendMessage(dispfd, "got first", playerNum);
         sleep(1);
-        strncpy(buf, "second\0", 7);
-        write(playfd, buf, 256);
+        sendMessage(playfd, "second", playerNum);
         sleep(1);
-        read(playfd, buf, 256);
+        readMessage(playfd, buf);
         int i = 0;
         while (i++ < 10) {
-            sprintf(buf, "player %i sending\0", playerNum);
-            write(dispfd, buf, 256);
-            sprintf(buf, "player %i sent\0", playerNum);
-            write(playfd, buf, 256);
+            sprintf(buf, "player %i sending %i\0", playerNum, i);
+            sendMessage(dispfd, buf, playerNum);
+            sprintf(buf, "player %i sent %i\0", playerNum, i);
+            sendMessage(playfd, buf, playerNum);
             sleep(1);
         }
+        sleep(1);
         close(playfd);
         unlink(argv[1]);
     }
     else {
-        strncpy(buf, "got second\0", 11);
-        write(dispfd, buf, 256);
-        strncpy(buf, "confirm\0", 8);
-        write(playfd, buf, 256);
-        sleep(2);
         playerNum = 2;
-    int i = 0;
+        sendMessage(dispfd, "got second\0", playerNum);
+        sendMessage(playfd, "confirm\0", playerNum);
+        sleep(1);
+        int i = 0;
         while (i++ < 10) {
-            read(playfd, buf, 256);
-            write(dispfd, buf, 256);
+            readMessage(playfd, buf);
+            sendMessage(dispfd, buf+2, playerNum);
         }
+        close(playfd);
     }
 
     return 0;
