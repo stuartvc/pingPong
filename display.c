@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
                 , argv[0]);
         return 1;
     }
+    message message;
     int dispfd = open(argv[1], O_RDONLY);
     char buf[256] = "\0";
     initscr();
@@ -24,9 +25,22 @@ int main(int argc, char *argv[]) {
     read(dispfd, buf, 256);
     printw("got message: %s\n", buf);
     refresh();
+    sleep(1);
+    clear();
+    wborder(stdscr, '|', '|', '-', '-', '+', '+', '+', '+');
+    refresh();
     while (!system("pgrep player > /dev/null")) {
-        read(dispfd, buf, 256);
-        printw("got message: %s\n", buf);
+        readMessage(dispfd, &message);
+        //read(dispfd, buf, 256);
+        //createMessage(buf, message);
+        //printw("got message: %s\n", buf);
+        if (message.playerNum == 1) {
+            mvwaddch(stdscr, message.myPlace, 2, ' ');
+            mvwaddch(stdscr, message.myPlace + 3, 2, '|');
+        } else {
+            mvwaddch(stdscr, message.myPlace, 77, ' ');
+            mvwaddch(stdscr, message.myPlace + 3, 77, '|');
+        }
         refresh();
     }
     sleep(1);
