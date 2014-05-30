@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
+#include "message.h"
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
