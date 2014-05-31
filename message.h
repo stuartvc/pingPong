@@ -22,4 +22,6 @@ void parseMessage(char buf[256], message *message);
 void sendMessage(int fd, message message);
 void readMessage(int fd, message *message);
 
+void initMessage(message *message, int playerNum);
+
 #endif
